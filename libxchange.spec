@@ -1,15 +1,16 @@
-%global upstream_version        1.1.1
+%global upstream_version        1.1.2-rc1
 
-Name:                   libxchange
-Version:                1.1.1
-Release:                %autorelease
-Summary:                Structured data representation and JSON support for C/C++
-License:                Unlicense
-URL:                    https://sigmyne.github.io/xchange
-Source0:                https://github.com/Sigmyne/xchange/archive/refs/tags/v%{upstream_version}.tar.gz
-BuildRequires:          gcc
-BuildRequires:          sed
-BuildRequires:          doxygen >= 1.13.0
+Name:            libxchange
+Version:         1.1.2~rc1
+Release:         %autorelease
+Summary:         Structured data representation and JSON support for C/C++
+License:         Unlicense
+URL:             https://sigmyne.github.io/xchange
+Source0:         https://github.com/Sigmyne/xchange/archive/refs/tags/v%{upstream_version}.tar.gz
+BuildRequires:   gcc
+BuildRequires:   cmake
+BuildRequires:   sed
+BuildRequires:   doxygen >= 1.13.0
 
 %description
 
@@ -39,15 +40,22 @@ library. The HTML API documentation can also be used with the Eclipse IDE.
 
 %build
 
-%make_build
+%cmake \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_DOC=ON
+
+%cmake_build
 
 %install
 
-%make_install PACKAGE_NAME=%{name} libdir=%{_libdir}
+%cmake_install
+
+# Rename documentation directory to package name
+mv %{buildroot}/%{_docdir}/xchange %{buildroot}/%{_docdir}/%{name}
 
 %check
 
-make test
+%ctest
 
 %files
 %license LICENSE
@@ -57,8 +65,10 @@ make test
 %files devel
 %{_includedir}/*
 %{_libdir}/libxchange.so
-%doc CONTRIBUTING.md
-%doc examples
+%{_libdir}/cmake
+%{_libdir}/pkgconfig
+%doc %{_docdir}/%{name}/*.md
+%doc %{_docdir}/%{name}/examples
 
 %files doc
 %license LICENSE
