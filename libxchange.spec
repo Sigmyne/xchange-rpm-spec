@@ -1,7 +1,7 @@
-%global upstream_version        1.2.0-rc2
+%global upstream_version        1.2.0-rc3
 
 Name:            libxchange
-Version:         1.2.0~rc2
+Version:         1.2.0~rc3
 Release:         %autorelease
 Summary:         Structured data representation and JSON support for C/C++
 License:         Unlicense
